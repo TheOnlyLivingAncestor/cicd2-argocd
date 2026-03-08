@@ -4,4 +4,4 @@ RUN useradd pythonuser -ms /bin/bash
 WORKDIR /home/pythonuser/app
 USER pythonuser
 COPY app.py app.py
-CMD python -u app.py
+CMD [python, -u, app.py]
