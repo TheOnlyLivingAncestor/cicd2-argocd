@@ -26,11 +26,16 @@ jobs:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ env.DOCKERHUB_KEY }}
 
-      - name: Build Docker image
-        run: cd ./app && docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Push Docker image
-        run: docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./app
+          push: true
+          platforms: linux/arm64
+          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Update values.yaml
         run: |
